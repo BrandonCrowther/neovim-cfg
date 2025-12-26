@@ -1,2 +1,2 @@
 rm -rf ~/.config/nvim
-ln -s ${PWD}/neovim-cfg
+ln -s ${PWD} ~/.config/nvim
