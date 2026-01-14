@@ -216,6 +216,23 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
 
+-- [[ Buffer Navigation ]]
+vim.keymap.set('n', '<leader>,', '<cmd>bprevious<cr>', { desc = 'Previous buffer' })
+vim.keymap.set('n', '<leader>.', '<cmd>bnext<cr>', { desc = 'Next buffer' })
+vim.keymap.set('n', '<leader>n', '<cmd>enew<cr>', { desc = 'New buffer' })
+
+-- [[ Replace Keymap ]]
+-- Replace all in current file - starts substitute command with word under cursor
+vim.keymap.set('n', '<leader>r', function()
+  local word = vim.fn.expand '<cword>'
+  if word == '' then
+    vim.fn.feedkeys(':%s//g' .. string.rep(vim.api.nvim_replace_termcodes('<Left>', true, false, true), 2), 'n')
+  else
+    local escaped_word = vim.fn.escape(word, '/\\')
+    vim.fn.feedkeys(':%s/' .. escaped_word .. '//g' .. string.rep(vim.api.nvim_replace_termcodes('<Left>', true, false, true), 2), 'n')
+  end
+end, { desc = '[R]eplace all in file' })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
