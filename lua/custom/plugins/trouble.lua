@@ -1,6 +1,16 @@
 return {
   'folke/trouble.nvim',
-  opts = {}, -- for default options, refer to the configuration section for custom setup.
+  opts = {
+    modes = {
+      symbols = {
+        win = {
+          position = 'right',
+          size = 0.25,
+        },
+        focus = false,
+      },
+    },
+  },
   cmd = 'Trouble',
   keys = {
     {
@@ -15,7 +25,7 @@ return {
     },
     {
       '<leader>cs',
-      '<cmd>Trouble symbols toggle focus=false<cr>',
+      '<cmd>Trouble symbols toggle<cr>',
       desc = 'Symbols (Trouble)',
     },
     {
