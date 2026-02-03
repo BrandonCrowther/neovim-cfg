@@ -15,6 +15,18 @@ return {
   },
   opts = {
     filesystem = {
+      filtered_items = {
+        hide_dotfiles = true,
+        hide_gitignored = false,
+        always_show = {
+          '.gitlab-ci.yml',
+          '.gitlab-ci.yaml',
+        },
+        always_show_by_pattern = { -- uses glob style patterns
+          '.env',
+          '.env*',
+        },
+      },
       window = {
         mappings = {
           ['\\'] = 'close_window',
