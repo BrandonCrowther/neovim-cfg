@@ -5,6 +5,14 @@ return {
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
       local lint = require 'lint'
+
+      -- Configure markdownlint with custom line length
+      lint.linters.markdownlint.args = {
+        '--stdin',
+        '--config',
+        vim.fn.stdpath('config') .. '/markdownlint.json',
+      }
+
       lint.linters_by_ft = {
         markdown = { 'markdownlint' },
       }
