@@ -4,6 +4,8 @@ return {
   dependencies = 'nvim-tree/nvim-web-devicons',
   event = 'VeryLazy',
   keys = {
+    { '<leader>bd', '<cmd>bdelete<cr>', desc = 'Delete buffer' },
+    { '<leader>bn', '<cmd>enew<cr>', desc = 'New buffer' },
     { '<leader>bp', '<Cmd>BufferLineTogglePin<CR>', desc = 'Toggle pin' },
     { '<leader>bP', '<Cmd>BufferLineGroupClose ungrouped<CR>', desc = 'Delete non-pinned buffers' },
     { '<leader>bo', '<Cmd>BufferLineCloseOthers<CR>', desc = 'Delete other buffers' },
@@ -19,7 +21,7 @@ return {
       close_command = 'bdelete! %d', -- can be a string | function, see "Mouse actions"
       right_mouse_command = 'bdelete! %d', -- can be a string | function, see "Mouse actions"
       diagnostics = 'nvim_lsp',
-      always_show_bufferline = false,
+      always_show_bufferline = true,
       diagnostics_indicator = function(_, _, diag)
         local icons = {
           Error = ' ',
@@ -27,8 +29,7 @@ return {
           Hint = ' ',
           Info = ' ',
         }
-        local ret = (diag.error and icons.Error .. diag.error .. ' ' or '')
-          .. (diag.warning and icons.Warn .. diag.warning or '')
+        local ret = (diag.error and icons.Error .. diag.error .. ' ' or '') .. (diag.warning and icons.Warn .. diag.warning or '')
         return vim.trim(ret)
       end,
       offsets = {

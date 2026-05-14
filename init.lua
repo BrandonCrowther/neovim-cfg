@@ -219,7 +219,6 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- [[ Buffer Navigation ]]
 vim.keymap.set('n', '<leader>,', '<cmd>bprevious<cr>', { desc = 'Previous buffer' })
 vim.keymap.set('n', '<leader>.', '<cmd>bnext<cr>', { desc = 'Next buffer' })
-vim.keymap.set('n', '<leader>n', '<cmd>enew<cr>', { desc = 'New buffer' })
 
 -- [[ Replace Keymap ]]
 -- Replace all in current file - starts substitute command with word under cursor
