@@ -266,40 +266,38 @@ return {
 
     local runtime_by_package = {
       ['bash-language-server'] = { 'node' },
-      ['markdownlint'] = { 'node' },
       ['checkstyle'] = { 'java' },
       ['eslint_d'] = { 'node' },
       ['jdtls'] = { 'java' },
+      ['jsonlint'] = { 'node' },
+      ['markdown-oxide'] = { 'cargo' },
+      ['markdownlint'] = { 'node' },
       ['prettier'] = { 'node' },
       ['prettierd'] = { 'node' },
       ['typescript-language-server'] = { 'node' },
+      ['yamlfmt'] = { 'go' },
       ts_ls = { 'node' },
     }
 
-    local required_runtimes = {}
-    local seen_runtimes = {}
-    for _, pkg in ipairs(ensure_installed) do
+    local missing_runtimes = {}
+    local installable = vim.tbl_filter(function(pkg)
       for _, runtime in ipairs(runtime_by_package[pkg] or {}) do
-        if not seen_runtimes[runtime] then
-          seen_runtimes[runtime] = true
-          table.insert(required_runtimes, runtime)
+        if vim.fn.executable(runtime) ~= 1 then
+          missing_runtimes[runtime] = true
+          return false
         end
       end
-    end
+      return true
+    end, ensure_installed)
 
-    local missing_runtimes = {}
-    for _, runtime in ipairs(required_runtimes) do
-      if vim.fn.executable(runtime) ~= 1 then
-        table.insert(missing_runtimes, runtime)
-      end
-    end
-    if #missing_runtimes > 0 then
+    local missing_list = vim.tbl_keys(missing_runtimes)
+    if #missing_list > 0 then
       vim.schedule(function()
-        vim.notify('Mason runtime(s) missing from PATH: ' .. table.concat(missing_runtimes, ', '), vim.log.levels.WARN)
+        vim.notify('Mason: skipping packages that require missing runtime(s): ' .. table.concat(missing_list, ', '), vim.log.levels.WARN)
       end)
     end
 
-    require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+    require('mason-tool-installer').setup { ensure_installed = installable }
 
     require('mason-lspconfig').setup {
       ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
