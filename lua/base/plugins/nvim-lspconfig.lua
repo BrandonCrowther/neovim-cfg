@@ -264,40 +264,16 @@ return {
       'yamllint',
     })
 
-    local runtime_by_package = {
-      ['bash-language-server'] = { 'node' },
-      ['checkstyle'] = { 'java' },
-      ['eslint_d'] = { 'node' },
-      ['jdtls'] = { 'java' },
-      ['jsonlint'] = { 'node' },
-      ['markdown-oxide'] = { 'cargo' },
-      ['markdownlint'] = { 'node' },
-      ['prettier'] = { 'node' },
-      ['prettierd'] = { 'node' },
-      ['typescript-language-server'] = { 'node' },
-      ['yamlfmt'] = { 'go' },
-      ts_ls = { 'node' },
-    }
+    local tool_check = require 'base.tool_check'
 
-    local missing_runtimes = {}
-    local installable = vim.tbl_filter(function(pkg)
-      for _, runtime in ipairs(runtime_by_package[pkg] or {}) do
-        if vim.fn.executable(runtime) ~= 1 then
-          missing_runtimes[runtime] = true
-          return false
-        end
-      end
-      return true
-    end, ensure_installed)
-
-    local missing_list = vim.tbl_keys(missing_runtimes)
-    if #missing_list > 0 then
+    local missing = tool_check.missing_runtimes(ensure_installed)
+    if #missing > 0 then
       vim.schedule(function()
-        vim.notify('Mason: skipping packages that require missing runtime(s): ' .. table.concat(missing_list, ', '), vim.log.levels.WARN)
+        vim.notify('Mason: skipping packages that require missing runtimes: ' .. table.concat(missing, ', '), vim.log.levels.WARN)
       end)
     end
 
-    require('mason-tool-installer').setup { ensure_installed = installable }
+    require('mason-tool-installer').setup { ensure_installed = tool_check.filter(ensure_installed) }
 
     require('mason-lspconfig').setup {
       ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)

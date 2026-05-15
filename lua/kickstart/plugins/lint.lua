@@ -5,49 +5,36 @@ return {
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
       local lint = require 'lint'
+      local tool_check = require 'base.tool_check'
 
-      -- Configure markdownlint with custom line length
-      lint.linters.markdownlint.args = {
-        '--stdin',
-        '--config',
-        vim.fn.stdpath('config') .. '/markdownlint.json',
-      }
+      lint.linters_by_ft = {}
 
-      lint.linters_by_ft = {
-        markdown = { 'markdownlint' },
-      }
+      local function add_linter(ft, linter)
+        if tool_check.available(linter) then
+          lint.linters_by_ft[ft] = lint.linters_by_ft[ft] or {}
+          table.insert(lint.linters_by_ft[ft], linter)
+        end
+      end
 
-      -- To allow other plugins to add linters to require('lint').linters_by_ft,
-      -- instead set linters_by_ft like this:
-      -- lint.linters_by_ft = lint.linters_by_ft or {}
-      -- lint.linters_by_ft['markdown'] = { 'markdownlint' }
-      --
-      -- However, note that this will enable a set of default linters,
-      -- which will cause errors unless these tools are available:
-      -- {
-      --   clojure = { "clj-kondo" },
-      --   dockerfile = { "hadolint" },
-      --   inko = { "inko" },
-      --   janet = { "janet" },
-      --   json = { "jsonlint" },
-      --   markdown = { "vale" },
-      --   rst = { "vale" },
-      --   ruby = { "ruby" },
-      --   terraform = { "tflint" },
-      --   text = { "vale" }
-      -- }
-      --
-      -- You can disable the default linters by setting their filetypes to nil:
-      -- lint.linters_by_ft['clojure'] = nil
-      -- lint.linters_by_ft['dockerfile'] = nil
-      -- lint.linters_by_ft['inko'] = nil
-      -- lint.linters_by_ft['janet'] = nil
-      -- lint.linters_by_ft['json'] = nil
-      -- lint.linters_by_ft['markdown'] = nil
-      -- lint.linters_by_ft['rst'] = nil
-      -- lint.linters_by_ft['ruby'] = nil
-      -- lint.linters_by_ft['terraform'] = nil
-      -- lint.linters_by_ft['text'] = nil
+      if tool_check.available 'markdownlint' then
+        lint.linters.markdownlint.args = {
+          '--stdin',
+          '--config',
+          vim.fn.stdpath('config') .. '/markdownlint.json',
+        }
+      end
+
+      add_linter('markdown',        'markdownlint')
+      add_linter('javascript',      'eslint_d')
+      add_linter('typescript',      'eslint_d')
+      add_linter('javascriptreact', 'eslint_d')
+      add_linter('typescriptreact', 'eslint_d')
+      add_linter('dockerfile',      'hadolint')
+      add_linter('json',            'jsonlint')
+      add_linter('terraform',       'tflint')
+      add_linter('terraform',       'tfsec')
+      add_linter('yaml',            'yamllint')
+      add_linter('java',            'checkstyle')
 
       -- Create autocommand which carries out the actual linting
       -- on the specified events.
