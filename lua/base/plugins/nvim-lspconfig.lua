@@ -240,8 +240,27 @@ return {
     -- for you, so that they are available from within Neovim.
     local ensure_installed = vim.tbl_keys(servers or {})
     vim.list_extend(ensure_installed, {
-      'stylua', -- Used to format Lua code
-      'shfmt', -- Used to format shell scripts
+      'bash-language-server',
+      'checkstyle',
+      'dotenv-linter',
+      'eslint_d',
+      'hadolint',
+      'jdtls',
+      'jsonlint',
+      'lua-language-server',
+      'markdown-oxide',
+      'prettier',
+      'prettierd',
+      'shfmt',
+      'stylua',
+      'terraform',
+      'terraform-ls',
+      'tflint',
+      'tfsec',
+      'typescript-language-server',
+      'xcode-build-server',
+      'yamlfmt',
+      'yamllint',
     })
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
