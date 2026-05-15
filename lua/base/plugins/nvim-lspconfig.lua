@@ -248,6 +248,7 @@ return {
       'jdtls',
       'jsonlint',
       'lua-language-server',
+      'markdownlint',
       'markdown-oxide',
       'prettier',
       'prettierd',
