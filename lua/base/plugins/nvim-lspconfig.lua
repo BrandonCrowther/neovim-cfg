@@ -266,6 +266,7 @@ return {
 
     local runtime_by_package = {
       ['bash-language-server'] = { 'node' },
+      ['markdownlint'] = { 'node' },
       ['checkstyle'] = { 'java' },
       ['eslint_d'] = { 'node' },
       ['jdtls'] = { 'java' },
