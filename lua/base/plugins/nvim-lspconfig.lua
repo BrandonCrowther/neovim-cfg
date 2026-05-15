@@ -262,6 +262,41 @@ return {
       'yamlfmt',
       'yamllint',
     })
+
+    local runtime_by_package = {
+      ['bash-language-server'] = { 'node' },
+      ['checkstyle'] = { 'java' },
+      ['eslint_d'] = { 'node' },
+      ['jdtls'] = { 'java' },
+      ['prettier'] = { 'node' },
+      ['prettierd'] = { 'node' },
+      ['typescript-language-server'] = { 'node' },
+      ts_ls = { 'node' },
+    }
+
+    local required_runtimes = {}
+    local seen_runtimes = {}
+    for _, pkg in ipairs(ensure_installed) do
+      for _, runtime in ipairs(runtime_by_package[pkg] or {}) do
+        if not seen_runtimes[runtime] then
+          seen_runtimes[runtime] = true
+          table.insert(required_runtimes, runtime)
+        end
+      end
+    end
+
+    local missing_runtimes = {}
+    for _, runtime in ipairs(required_runtimes) do
+      if vim.fn.executable(runtime) ~= 1 then
+        table.insert(missing_runtimes, runtime)
+      end
+    end
+    if #missing_runtimes > 0 then
+      vim.schedule(function()
+        vim.notify('Mason runtime(s) missing from PATH: ' .. table.concat(missing_runtimes, ', '), vim.log.levels.WARN)
+      end)
+    end
+
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
     require('mason-lspconfig').setup {
