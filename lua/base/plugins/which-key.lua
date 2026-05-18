@@ -11,7 +11,7 @@
 --
 -- Then, because we use the `opts` key (recommended), the configuration runs
 -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
-return {              -- Useful plugin to show you pending keybinds.
+return { -- Useful plugin to show you pending keybinds.
   'folke/which-key.nvim',
   event = 'VimEnter', -- Sets the loading event to 'VimEnter'
   opts = {
@@ -28,10 +28,10 @@ return {              -- Useful plugin to show you pending keybinds.
         Down = '<Down> ',
         Left = '<Left> ',
         Right = '<Right> ',
-        C = '<C-…> ',
+        C = '<Ctrl-…> ',
         M = '<M-…> ',
         D = '<D-…> ',
-        S = '<S-…> ',
+        S = '<Super-…> ',
         CR = '<CR> ',
         Esc = '<Esc> ',
         ScrollWheelDown = '<ScrollWheelDown> ',
@@ -54,11 +54,11 @@ return {              -- Useful plugin to show you pending keybinds.
         F12 = '<F12>',
       },
     },
-
-    -- Document existing key chains
     spec = {
       { '<leader>s', group = '[S]earch' },
       { '<leader>t', group = '[T]oggle' },
+      { '<leader>b', group = '[b]uffer' },
+      { '<leader>x', group = '[X] Trouble' },
       { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
     },
   },
