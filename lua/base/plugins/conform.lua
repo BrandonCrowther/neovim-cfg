@@ -30,7 +30,7 @@ return { -- Autoformat
     end,
     formatters_by_ft = {
       lua = { 'stylua' },
-      markdown = require('base.tool_check').available 'markdownlint' and { 'markdownlint' } or {},
+      markdown = require('custom.tool_check').available 'markdownlint' and { 'markdownlint' } or {},
       -- Conform can also run multiple formatters sequentially
       -- python = { "isort", "black" },
       --
@@ -38,7 +38,7 @@ return { -- Autoformat
       javascript = { 'prettierd', 'prettier', stop_after_first = true },
       sh = { 'shfmt' },
       bash = { 'shfmt' },
-      yaml = require('base.tool_check').available 'yamlfmt' and { 'yamlfmt' } or {},
+      yaml = require('custom.tool_check').available 'yamlfmt' and { 'yamlfmt' } or {},
     },
   },
 }

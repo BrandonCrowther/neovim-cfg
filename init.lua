@@ -220,17 +220,10 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 vim.keymap.set('n', '<leader>,', '<cmd>bprevious<cr>', { desc = 'Previous buffer' })
 vim.keymap.set('n', '<leader>.', '<cmd>bnext<cr>', { desc = 'Next buffer' })
 
--- [[ Replace Keymap ]]
--- Replace all in current file - starts substitute command with word under cursor
-vim.keymap.set('n', '<leader>r', function()
-  local word = vim.fn.expand '<cword>'
-  if word == '' then
-    vim.fn.feedkeys(':%s//g' .. string.rep(vim.api.nvim_replace_termcodes('<Left>', true, false, true), 2), 'n')
-  else
-    local escaped_word = vim.fn.escape(word, '/\\')
-    vim.fn.feedkeys(':%s/' .. escaped_word .. '//g' .. string.rep(vim.api.nvim_replace_termcodes('<Left>', true, false, true), 2), 'n')
-  end
-end, { desc = '[R]eplace all in file' })
+vim.keymap.set('n', 'r', ':%s/\\<<C-r><C-w>\\>//g<left><left>', { desc = 'Find and replace' })
+-- TODO: find way to do global replace via hotkey
+-- vim.keymap.set('n', 'R', ':%s/\\<<C-r><C-w>\\>//g<left><left>', { desc = 'Find and replace' })
+vim.keymap.set('v', 'r', '"zy:%s/<C-r>z//g<left><left>', { desc = 'Find and replace' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`

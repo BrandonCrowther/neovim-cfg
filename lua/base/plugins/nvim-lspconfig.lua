@@ -264,7 +264,7 @@ return {
       'yamllint',
     })
 
-    local tool_check = require 'base.tool_check'
+    local tool_check = require 'custom.tool_check'
 
     local missing = tool_check.missing_runtimes(ensure_installed)
     if #missing > 0 then

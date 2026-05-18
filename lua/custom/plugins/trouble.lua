@@ -2,34 +2,37 @@ return {
   'folke/trouble.nvim',
   opts = {
     modes = {
-      symbols = {
-        win = {
+      test = {
+        mode = 'diagnostics',
+        preview = {
+          type = 'split',
+          relative = 'win',
           position = 'right',
-          size = 0.25,
+          size = 0.3,
         },
-        focus = false,
       },
     },
   },
+  event = 'LspAttach',
   cmd = 'Trouble',
   keys = {
     {
-      '<leader>xx',
+      '<leader>xX',
       '<cmd>Trouble diagnostics toggle<cr>',
       desc = 'Diagnostics (Trouble)',
     },
     {
-      '<leader>xX',
+      '<leader>xx',
       '<cmd>Trouble diagnostics toggle filter.buf=0<cr>',
       desc = 'Buffer Diagnostics (Trouble)',
     },
     {
-      '<leader>cs',
+      '<leader>xs',
       '<cmd>Trouble symbols toggle<cr>',
       desc = 'Symbols (Trouble)',
     },
     {
-      '<leader>cl',
+      '<leader>xl',
       '<cmd>Trouble lsp toggle focus=false win.position=right<cr>',
       desc = 'LSP Definitions / references / ... (Trouble)',
     },

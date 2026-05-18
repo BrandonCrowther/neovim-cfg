@@ -5,7 +5,7 @@ return {
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
       local lint = require 'lint'
-      local tool_check = require 'base.tool_check'
+      local tool_check = require 'custom.tool_check'
 
       lint.linters_by_ft = {}
 
@@ -20,21 +20,21 @@ return {
         lint.linters.markdownlint.args = {
           '--stdin',
           '--config',
-          vim.fn.stdpath('config') .. '/markdownlint.json',
+          vim.fn.stdpath 'config' .. '/markdownlint.json',
         }
       end
 
-      add_linter('markdown',        'markdownlint')
-      add_linter('javascript',      'eslint_d')
-      add_linter('typescript',      'eslint_d')
+      add_linter('markdown', 'markdownlint')
+      add_linter('javascript', 'eslint_d')
+      add_linter('typescript', 'eslint_d')
       add_linter('javascriptreact', 'eslint_d')
       add_linter('typescriptreact', 'eslint_d')
-      add_linter('dockerfile',      'hadolint')
-      add_linter('json',            'jsonlint')
-      add_linter('terraform',       'tflint')
-      add_linter('terraform',       'tfsec')
-      add_linter('yaml',            'yamllint')
-      add_linter('java',            'checkstyle')
+      add_linter('dockerfile', 'hadolint')
+      add_linter('json', 'jsonlint')
+      add_linter('terraform', 'tflint')
+      add_linter('terraform', 'tfsec')
+      add_linter('yaml', 'yamllint')
+      add_linter('java', 'checkstyle')
 
       -- Create autocommand which carries out the actual linting
       -- on the specified events.

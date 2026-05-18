@@ -1,16 +1,16 @@
 local M = {}
 
 M.runtime_by_tool = {
-  ['bash-language-server']       = 'node',
-  ['checkstyle']                 = 'java',
-  ['eslint_d']                   = 'node',
-  ['jdtls']                      = 'java',
-  ['jsonlint']                   = 'node',
-  ['markdownlint']               = 'node',
-  ['prettier']                   = 'node',
-  ['prettierd']                  = 'node',
+  ['bash-language-server'] = 'node',
+  ['checkstyle'] = 'java',
+  ['eslint_d'] = 'node',
+  ['jdtls'] = 'java',
+  ['jsonlint'] = 'node',
+  ['markdownlint'] = 'node',
+  ['prettier'] = 'node',
+  ['prettierd'] = 'node',
   ['typescript-language-server'] = 'node',
-  ts_ls  = 'node',
+  ts_ls = 'node',
   bashls = 'node',
 }
 
