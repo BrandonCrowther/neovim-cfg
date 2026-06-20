@@ -14,6 +14,14 @@ return { -- Autoformat
   },
   opts = {
     notify_on_error = false,
+    formatters = {
+      markdownlint = {
+        prepend_args = {
+          '--config',
+          vim.fn.stdpath 'config' .. '/config/linters/markdownlint.json',
+        },
+      },
+    },
     format_on_save = function(bufnr)
       -- Disable "format_on_save lsp_fallback" for languages that don't
       -- have a well standardized coding style. You can add additional
@@ -24,11 +32,13 @@ return { -- Autoformat
       else
         return {
           timeout_ms = 500,
-          lsp_format = 'fallback',
+          lsp_format = 'never',
         }
       end
     end,
     formatters_by_ft = {
+      -- java = { 'google-java-format' },
+      java = {},
       lua = { 'stylua' },
       markdown = require('custom.tool_check').available 'markdownlint' and { 'markdownlint' } or {},
       -- Conform can also run multiple formatters sequentially
@@ -36,6 +46,7 @@ return { -- Autoformat
       --
       -- You can use 'stop_after_first' to run the first available formatter from the list
       javascript = { 'prettierd', 'prettier', stop_after_first = true },
+      javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
       sh = { 'shfmt' },
       bash = { 'shfmt' },
       yaml = require('custom.tool_check').available 'yamlfmt' and { 'yamlfmt' } or {},
