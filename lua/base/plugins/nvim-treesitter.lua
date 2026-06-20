@@ -1,10 +1,10 @@
 return { -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
+  branch = 'main',
   build = ':TSUpdate',
-  main = 'nvim-treesitter', -- Sets main module to use for opts
-  -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-  opts = {
-    ensure_installed = {
+  lazy = false,
+  config = function()
+    local ensure_installed = {
       'bash',
       'c',
       'diff',
@@ -20,24 +20,38 @@ return { -- Highlight, edit, and navigate code
       'typescript',
       'vim',
       'vimdoc',
-    },
-    -- Autoinstall languages that are not installed
-    auto_install = true,
-    highlight = {
-      enable = true,
-      -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-      --  If you are experiencing weird indenting issues, add the language to
-      --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-      additional_vim_regex_highlighting = { 'ruby' },
-    },
-    indent = { enable = true, disable = { 'ruby' } },
-  },
-  config = function(_, opts)
-    require('nvim-treesitter.configs').setup(opts)
+    }
+
+    require('nvim-treesitter').install(ensure_installed)
+
     if vim.treesitter.language and vim.treesitter.language.register then
       vim.treesitter.language.register('tsx', 'javascriptreact')
       vim.treesitter.language.register('bash', 'dotenv')
     end
+
+    -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
+    -- If you are experiencing weird indenting issues, add the language to the
+    -- list of additional_vim_regex_highlighting and skip enabling treesitter indent for it.
+    local additional_vim_regex_highlighting = { 'ruby' }
+    local indent_disabled = { 'ruby' }
+
+    vim.api.nvim_create_autocmd('FileType', {
+      callback = function(args)
+        local ft = vim.bo[args.buf].filetype
+        local ok = pcall(vim.treesitter.start, args.buf)
+        if not ok then
+          return
+        end
+
+        if vim.tbl_contains(additional_vim_regex_highlighting, ft) then
+          vim.bo[args.buf].syntax = 'on'
+        end
+
+        if not vim.tbl_contains(indent_disabled, ft) then
+          vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end
+      end,
+    })
 
     vim.api.nvim_create_autocmd('FileType', {
       pattern = 'dotenv',
