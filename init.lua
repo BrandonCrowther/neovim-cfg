@@ -95,6 +95,21 @@ vim.g.maplocalleader = ' '
 -- local asdf_shims = vim.env.HOME .. '/.asdf/shims'
 -- vim.env.PATH = asdf_shims .. ':' .. vim.env.PATH
 
+-- Async log file cleanup (truncate if > 10MB)
+do
+  local max_size = 10 * 1024 * 1024
+  local log_dir = vim.fn.stdpath 'state'
+  local logs = { 'lsp.log', 'mason.log', 'conform.log' }
+  for _, name in ipairs(logs) do
+    local path = log_dir .. '/' .. name
+    vim.uv.fs_stat(path, function(err, stat)
+      if not err and stat and stat.size > max_size then
+        vim.uv.fs_unlink(path, function() end)
+      end
+    end)
+  end
+end
+
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = false
 
@@ -236,6 +251,14 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
     vim.hl.on_yank()
+  end,
+})
+
+vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+  desc = 'Treat .js files as React JSX',
+  pattern = '*.js',
+  callback = function(args)
+    vim.bo[args.buf].filetype = 'javascriptreact'
   end,
 })
 
