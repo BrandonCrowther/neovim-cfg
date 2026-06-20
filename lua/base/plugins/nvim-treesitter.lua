@@ -4,7 +4,23 @@ return { -- Highlight, edit, and navigate code
   main = 'nvim-treesitter', -- Sets main module to use for opts
   -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
   opts = {
-    ensure_installed = { 'bash', 'c', 'diff', 'html', 'java', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+    ensure_installed = {
+      'bash',
+      'c',
+      'diff',
+      'html',
+      'java',
+      'javascript',
+      'lua',
+      'luadoc',
+      'markdown',
+      'markdown_inline',
+      'query',
+      'tsx',
+      'typescript',
+      'vim',
+      'vimdoc',
+    },
     -- Autoinstall languages that are not installed
     auto_install = true,
     highlight = {
@@ -16,6 +32,42 @@ return { -- Highlight, edit, and navigate code
     },
     indent = { enable = true, disable = { 'ruby' } },
   },
+  config = function(_, opts)
+    require('nvim-treesitter.configs').setup(opts)
+    if vim.treesitter.language and vim.treesitter.language.register then
+      vim.treesitter.language.register('tsx', 'javascriptreact')
+      vim.treesitter.language.register('bash', 'dotenv')
+    end
+
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = 'dotenv',
+      callback = function(args)
+        vim.bo[args.buf].commentstring = '# %s'
+      end,
+    })
+
+    -- Treat Fastlane files as Ruby
+    vim.filetype.add({
+      filename = {
+        Fastfile = 'ruby',
+        Appfile = 'ruby',
+        Matchfile = 'ruby',
+        Gymfile = 'ruby',
+        Scanfile = 'ruby',
+        Deliverfile = 'ruby',
+        Pluginfile = 'ruby',
+        Snapfile = 'ruby',
+        ['.env'] = 'dotenv',
+        ['.envrc'] = 'sh',
+        env = 'dotenv',
+        envrc = 'sh',
+      },
+      pattern = {
+        ['%.env%..+'] = 'dotenv',
+        ['env%..+'] = 'dotenv',
+      },
+    })
+  end,
   -- There are additional nvim-treesitter modules that you can use to interact
   -- with nvim-treesitter. You should go explore a few and see what interests you:
   --
