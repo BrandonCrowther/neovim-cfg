@@ -183,6 +183,21 @@ return {
     --  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
     --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
     local capabilities = require('blink.cmp').get_lsp_capabilities()
+    local mason_path = vim.fn.stdpath 'data' .. '/mason'
+    local jdtls_lombok_jar = mason_path .. '/packages/jdtls/lombok.jar'
+
+    local notify = vim.notify
+    local ok, fidget = pcall(require, 'fidget')
+    if ok then
+      notify = fidget.notify
+    end
+
+    -- Verify lombok exists and set JDTLS_JVM_ARGS for lombok support
+    if vim.fn.filereadable(jdtls_lombok_jar) == 0 then
+      notify('Lombok jar not found at: ' .. jdtls_lombok_jar, vim.log.levels.ERROR)
+    else
+      vim.env.JDTLS_JVM_ARGS = '-javaagent:' .. jdtls_lombok_jar
+    end
 
     -- Enable the following language servers
     --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -207,7 +222,11 @@ return {
       ts_ls = {},
       --
 
-      bashls = {},
+      bashls = {
+        filetypes = { 'bash', 'sh', 'dotenv' },
+      },
+
+      jdtls = {},
 
       lua_ls = {
         -- cmd = { ... },
@@ -256,6 +275,7 @@ return {
       'stylua',
       'terraform',
       'terraform-ls',
+      'trivy',
       'tflint',
       'tfsec',
       'typescript-language-server',
@@ -277,17 +297,12 @@ return {
 
     require('mason-lspconfig').setup {
       ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
-      automatic_installation = false,
-      handlers = {
-        function(server_name)
-          local server = servers[server_name] or {}
-          -- This handles overriding only values explicitly passed
-          -- by the server configuration above. Useful when disabling
-          -- certain features of an LSP (for example, turning off formatting for ts_ls)
-          server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-          require('lspconfig')[server_name].setup(server)
-        end,
-      },
+      automatic_enable = false,
     }
+
+    for server_name, server in pairs(servers) do
+      server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+      require('lspconfig')[server_name].setup(server)
+    end
   end,
 }
